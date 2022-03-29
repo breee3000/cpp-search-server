@@ -1,4 +1,5 @@
 #pragma once
+
 #include "string_processing.h"
 #include <vector>
 #include <string>
@@ -25,6 +26,7 @@ enum class DocumentStatus {
     BANNED,
     REMOVED,
 };
+
 
 
 

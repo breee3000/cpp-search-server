@@ -1,4 +1,5 @@
 #pragma once
+
 #include <iostream>
 #include <vector>
 
@@ -10,12 +11,15 @@ public:
         , last_(end)
         , size_(distance(first_, last_)) {
     }
+
     Iterator begin() const {
         return first_;
     }
+
     Iterator end() const {
         return last_;
     }
+
     size_t size() const {
         return size_;
     }
@@ -44,12 +48,15 @@ public:
             begin = current_page_end;
         }
     }
+
     auto begin() const {
         return pages_.begin();
     }
+
     auto end() const {
         return pages_.end();
     }
+
     size_t size() const {
         return pages_.size();
     }

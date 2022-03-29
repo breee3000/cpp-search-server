@@ -1,4 +1,5 @@
 #pragma once
+
 #include "read_input_functions.h"
 #include <vector>
 #include <set>

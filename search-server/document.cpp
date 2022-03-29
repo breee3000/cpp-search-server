@@ -9,7 +9,3 @@ ostream& operator<<(ostream& out, const Document& document) {
         << "rating = "s << document.rating << " }"s;
     return out;
 }
-
-
-
-
