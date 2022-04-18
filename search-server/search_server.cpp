@@ -18,7 +18,7 @@ void SearchServer::AddDocument(int document_id, const string& document, Document
         document_to_word_frequency_[document_id][word] += inv_word_count;
     }
     documents_.emplace(document_id, DocumentData{ComputeAverageRating(ratings), status});
-    document_ids_.push_back(document_id);
+    document_ids_.insert(document_id);
 }
 
 vector<Document> SearchServer::FindTopDocuments(const string& raw_query, DocumentStatus status) const {
@@ -36,11 +36,11 @@ int SearchServer::GetDocumentCount() const {
     return documents_.size();
 }
 
-vector<int>::const_iterator SearchServer::begin() const {
+set<int>::const_iterator SearchServer::begin() const {
     return document_ids_.begin();
 }
 
-vector<int>::const_iterator SearchServer::end() const {
+set<int>::const_iterator SearchServer::end() const {
     return document_ids_.end();
 }
 
@@ -52,15 +52,14 @@ const map<string, double>& SearchServer::GetWordFrequencies(int document_id) con
 }
 
 void SearchServer::RemoveDocument(int document_id) {
-    documents_.erase(document_id);
-
-    auto res = find(document_ids_.begin(), document_ids_.end(), document_id);
-    document_ids_.erase(res);
-
-    document_to_word_frequency_.erase(document_id);
-
-    for (auto& [key, value]: word_to_document_freqs_) {
-        value.erase(document_id);
+    if (document_ids_.count(document_id)) {
+        map<string, double> words = GetWordFrequencies(document_id);
+        for (auto it = words.begin(); it != words.end(); ++it) {
+            word_to_document_freqs_.erase(it->first);
+        }
+        documents_.erase(document_id);
+        document_ids_.erase(document_id);
+        document_to_word_frequency_.erase(document_id);
     }
 }
 
@@ -112,10 +111,7 @@ vector<string> SearchServer::SplitIntoWordsNoStop(const string& text) const {
 }
 
 int SearchServer::ComputeAverageRating(const vector<int>& ratings) {
-    int rating_sum = 0;
-    for (const int rating : ratings) {
-        rating_sum += rating;
-    }
+    int rating_sum = accumulate(ratings.begin(), ratings.end(), 0);
     return rating_sum / static_cast<int>(ratings.size());
 }
 

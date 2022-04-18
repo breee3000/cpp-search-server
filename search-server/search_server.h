@@ -4,6 +4,7 @@
 #include <map>
 #include <set>
 #include <cmath>
+#include <numeric>
 
 #include "document.h"
 
@@ -26,8 +27,8 @@ public:
 
     int GetDocumentCount() const;
 
-    std::vector<int>::const_iterator begin() const;
-    std::vector<int>::const_iterator end() const;
+    std::set<int>::const_iterator begin() const;
+    std::set<int>::const_iterator end() const;
 
     const std::map<std::string, double>& GetWordFrequencies(int document_id) const;
 
@@ -43,7 +44,7 @@ private:
     std::map<std::string, std::map<int, double>> word_to_document_freqs_;
     std::map<int, std::map<std::string, double>> document_to_word_frequency_;
     std::map<int, DocumentData> documents_;
-    std::vector<int> document_ids_;
+    std::set<int> document_ids_;
 
     bool IsStopWord(const std::string& word) const;
 
