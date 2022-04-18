@@ -1,10 +1,11 @@
 #pragma once
 
-#include "string_processing.h"
 #include <vector>
 #include <string>
 #include <algorithm>
 #include <iostream>
+
+#include "string_processing.h"
 
 struct Document {
     Document() = default;
@@ -27,6 +28,4 @@ enum class DocumentStatus {
     REMOVED,
 };
 
-
-
-
+void PrintDocument(const Document& document);

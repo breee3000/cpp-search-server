@@ -1,8 +1,9 @@
 #pragma once
 
-#include "read_input_functions.h"
 #include <vector>
 #include <set>
+
+#include "read_input_functions.h"
 
 std::vector<std::string> SplitIntoWords(const std::string& text);
 

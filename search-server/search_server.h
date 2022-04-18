@@ -1,10 +1,11 @@
 #pragma once
 
-#include "document.h"
 #include <utility>
 #include <map>
 #include <set>
 #include <cmath>
+
+#include "document.h"
 
 using namespace std::string_literals;
 
@@ -25,7 +26,12 @@ public:
 
     int GetDocumentCount() const;
 
-    int GetDocumentId(int index) const;
+    std::vector<int>::const_iterator begin() const;
+    std::vector<int>::const_iterator end() const;
+
+    const std::map<std::string, double>& GetWordFrequencies(int document_id) const;
+
+    void RemoveDocument(int document_id);
 
     std::tuple<std::vector<std::string>, DocumentStatus> MatchDocument(const std::string& raw_query, int document_id) const;
 private:
@@ -35,6 +41,7 @@ private:
     };
     const std::set<std::string> stop_words_;
     std::map<std::string, std::map<int, double>> word_to_document_freqs_;
+    std::map<int, std::map<std::string, double>> document_to_word_frequency_;
     std::map<int, DocumentData> documents_;
     std::vector<int> document_ids_;
 
@@ -51,14 +58,14 @@ private:
         bool is_minus;
         bool is_stop;
     };
-    
+
     QueryWord ParseQueryWord(const std::string& text) const;
 
     struct Query {
         std::set<std::string> plus_words;
         std::set<std::string> minus_words;
     };
-    
+
     Query ParseQuery(const std::string& text) const;
 
     double ComputeWordInverseDocumentFreq(const std::string& word) const;
