@@ -67,27 +67,6 @@ void SearchServer::RemoveDocument(int document_id) {
     }
 }
 
-void RemoveDuplicates(SearchServer& search_server) {
-    set<string> comparison_set;
-    set<int> ids_to_remove;
-    for (const int document_id : search_server) {
-        std::map<std::string_view, double> id_words = search_server.GetWordFrequencies(document_id);
-        string words_to_compare = ""s;
-        for (auto it = id_words.begin(); it != id_words.end(); ++it) {
-            words_to_compare += it->first;
-        }
-        if (comparison_set.count(words_to_compare) != 0) {
-            ids_to_remove.insert(document_id);
-        } else {
-            comparison_set.insert(words_to_compare);
-        }
-    }
-    for (auto id: ids_to_remove) {
-        cout << "Found duplicate document id "s << id << endl;
-        search_server.RemoveDocument(id);
-    }
-}
-
 tuple<vector<string_view>, DocumentStatus> SearchServer::MatchDocument(const string_view& raw_query, int document_id) const {
     const auto query = ParseQuery(raw_query);
     vector<string_view> matched_words;
@@ -135,8 +114,8 @@ vector<string_view> SearchServer::SplitIntoWordsNoStop(const string_view& text) 
 }
 
 int SearchServer::ComputeAverageRating(const vector<int>& ratings) {
-    int rating_sum = accumulate(ratings.begin(), ratings.end(), 0);
-    return rating_sum / static_cast<int>(ratings.size());
+    int rating_sum = 0;
+    return !ratings.empty() ? (accumulate(ratings.begin(), ratings.end(), 0)) / static_cast<int>(ratings.size()) : rating_sum;
 }
 
 SearchServer::QueryWord SearchServer::ParseQueryWord(const string_view& text) const {
@@ -181,7 +160,7 @@ SearchServer::QueryParPolicy SearchServer::ParseQueryParPolicy(const std::string
     sort(std::execution::par, result.minus_words.begin(), result.minus_words.end());
     auto last_minus = unique(std::execution::par, result.minus_words.begin(), result.minus_words.end());
     result.minus_words.erase(last_minus, result.minus_words.end());
-    
+
     return result;
 }
 

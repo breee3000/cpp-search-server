@@ -7,7 +7,7 @@ void RemoveDuplicates(SearchServer& search_server) {
     set<int> ids_to_remove;
 
     for (const int document_id : search_server) {
-        std::map<std::string, double> id_words = search_server.GetWordFrequencies(document_id);
+        std::map<std::string_view, double> id_words = search_server.GetWordFrequencies(document_id);
         string words_to_compare = ""s;
         for (auto it = id_words.begin(); it != id_words.end(); ++it) {
             words_to_compare += it->first;
